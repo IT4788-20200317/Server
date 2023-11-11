@@ -7,15 +7,22 @@ app.use(bodyParser.json());
 
 let myMap = new Map();
 
+let myAccounts = new Map();
+
 app.post("/login", (req, res) => {
     const requestBody = req.body;
     console.log("Request body:", requestBody);
-    res.json(myMap.get(requestBody.email));
+    if (myAccounts.get(requestBody.email) != requestBody.password) {
+        res.status(401).json({ message: "Đăng nhập không thành công. Sai email hoặc mật khẩu." });
+    } else {
+        res.json(myMap.get(requestBody.email));
+    }
 });
 
 app.post("/register", (req, res) => {
     const requestBody = req.body;
     console.log(" request register ", requestBody);
+    myAccounts.set(requestBody.email, requestBody.password);
     res.json(requestBody);
 });
 
